@@ -382,6 +382,13 @@ func (s *Service) runContinuousQueryAndWriteResult(cq *ContinuousQuery) error {
 	if res.Err != nil {
 		return res.Err
 	}
+
+	// Drain the result.
+	for series := range res.SeriesCh() {
+		for range series.RowCh() {
+			// Do nothing.
+		}
+	}
 	return nil
 }
 
